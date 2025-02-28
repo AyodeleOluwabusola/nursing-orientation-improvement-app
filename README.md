@@ -3,4 +3,4 @@ This project integrates a model that classifies pavement types based on input im
 
 To startup the project:
 
-Run "uvicorn main:app --reload"
+Run "uvicorn main:app --reload" from root directory
