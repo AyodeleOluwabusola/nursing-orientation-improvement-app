@@ -11,41 +11,36 @@ from app.services.match_service import get_background
 import requests
 import json
 
-def create_user_profile(user_data: UserProfile, db: Session):
+def create_user_profile(user_data: UserProfile, token: dict, db: Session):
 
-    # new_user = User(
-    #     email=user_data.email,
-    #     first_name=user_data.first_name,
-    #     last_name=user_data.last_name,
-    #     phone_number=user_data.phone_number,
-    #     type=user_data.type,
-    #     clinical_background=user_data.clinical_background,
-    #     learning_style=user_data.learning_style,
-    #     personality=user_data.personality,
-    #     addition_information=user_data.addition_information
-    # )
-    user = db.query(User).filter(User.id == user_data.id).first()
-    if not user:
-        return None
-
-    update_dict = user_data.dict(exclude_unset=True)
-    for key, value in update_dict.items():
-        setattr(user, key, value)
-
+    new_user = User(
+        email=user_data.email,
+        first_name=user_data.first_name,
+        last_name=user_data.last_name,
+        phone_number=user_data.phone_number,
+        type=user_data.type,
+        clinical_background=user_data.clinical_background,
+        learning_style=user_data.learning_style,
+        personality=user_data.personality,
+        addition_information=user_data.addition_information
+    )
+    db.add(new_user)
     db.commit()
-    db.refresh(user)
+    db.flush()
 
-    print("ID Value: ", user.id)
+    print("ID Value: ", new_user.id)
     if (user_data.type == "PRECEPTOR"):
-        response = embed_preceptor(user.id, db)
+        # Call Vector database
+        response = embed_preceptor(new_user.id, db)
         if response.get("error"):
             raise HTTPException(status_code=400, detail="Failed to register preceptor")
 
+
     return APIResponse(
-        status="00",
-        message="User profile created successfully",
-        data=user
-    )
+            status="00",
+            message="User profile created successfully",
+            data=new_user
+        )
 
 
 

@@ -11,7 +11,7 @@ from app.services.profile_service import create_user_profile, create_user, fetch
 
 router = APIRouter()
 
-@router.get("/{user_id}", response_model=UserProfile)
+@router.get("/{user_id}")
 def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()
     print(user)
@@ -23,14 +23,15 @@ def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
 def retrieve_all_orientees_by_preceptor(preceptor_id: int, db: Session = Depends(get_db)):
     return fetch_orientees_by_preceptor(preceptor_id, db)
 
-@router.post("", response_model=UserProfile)
+@router.post("")
 def create_profile(
         user_data: UserProfile,
-        db: Session = Depends(get_db)
-        # current_user: dict = Depends(verify_firebase_token)
+        db: Session = Depends(get_db),
 ):
     return  create_user_profile(user_data, db)
 
+
+# Would not be used by FE
 @router.post("/create", status_code=201)
 def create_user(
         user_data: UserCreate,
@@ -40,6 +41,7 @@ def create_user(
     return create_user(user_data, decoded_token, db)
 
 
+# Would not be used by FE
 @router.post("/signin")
 def signin_user(
         data: UserSignIn,
