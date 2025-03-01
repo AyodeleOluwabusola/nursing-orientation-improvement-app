@@ -12,7 +12,10 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True, nullable=False)
     email = Column(String, unique=True, nullable=False)
-    password = Column(String, nullable=False)
-    role = Column(Enum(Role), default=Role.ORIENTEE)
+    type = Column(Enum(Role), default=Role.ORIENTEE)
+    clinical_background = Column(String, nullable=False)
+    learning_style = Column(String, nullable=False)
+    personality = Column(String, nullable=False)
+    academic_background = Column(String, nullable=True) # for. "Orientee"
+    specialty = Column(String, nullable=True) # for. "Preceptor"

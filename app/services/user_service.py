@@ -10,3 +10,5 @@ def create_user_in_firestore(user_data: UserCreate):
     user_dict = user_data.dict()
     db.collection("users").document(doc_id).set(user_dict)
     return doc_id
+
+
