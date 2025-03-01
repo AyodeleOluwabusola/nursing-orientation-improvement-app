@@ -28,6 +28,11 @@ def retrieve_all_possible_matches(orientee_id: int, db: Session):
             message="User not an orientee"
         )
 
+    if data.matched:
+        return APIResponse(
+            status="01",
+            message="Orientee already matched to a preceptor"
+        )
 
     background = get_background(orientee_id, db)
     payload = {"background": background}
