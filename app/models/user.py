@@ -11,6 +11,8 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
+    firebase_uid = Column(String)
+    password = Column(String)
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
     phone_number = Column(String, nullable=True)
@@ -19,6 +21,4 @@ class User(Base):
     clinical_background = Column(String, nullable=False)
     learning_style = Column(String, nullable=False)
     personality = Column(String, nullable=False)
-    # academic_background = Column(String, nullable=True) # for. "Orientee"
-    # specialty = Column(String, nullable=True) # for. "Preceptor"
     addition_information = Column(String, nullable=True)

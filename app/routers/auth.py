@@ -1,6 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from firebase_admin import auth
-from typing import Optional
 
 router = APIRouter()
 

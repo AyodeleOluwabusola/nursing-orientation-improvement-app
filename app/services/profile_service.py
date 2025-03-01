@@ -4,13 +4,14 @@ from app.core.config import settings
 from app.models.match import Match
 from app.models.user import User
 from app.schemas.response import APIResponse
-from app.schemas.user import UserCreate, UserOut
+from app.schemas.user import UserProfile, UserOut, UserCreate
+from app.services.firebase_auth import hash_password
 from app.services.match_service import get_background
 
 import requests
 import json
 
-def create_user_profile(user_data: UserCreate, db: Session):
+def create_user_profile(user_data: UserProfile, db: Session):
 
     new_user = User(
         email=user_data.email,
@@ -31,20 +32,67 @@ def create_user_profile(user_data: UserCreate, db: Session):
     if (user_data.type == "PRECEPTOR"):
         # Call Vector database
         response = embed_preceptor(new_user.id, db)
+        print("Response: ", response)
         if response.get("error"):
             raise HTTPException(status_code=400, detail="Failed to register preceptor")
 
-    return UserCreate(
-        email=new_user.email,
-        first_name=new_user.first_name,
-        last_name=new_user.last_name,
-        phone_number= new_user.phone_number,
-        clinical_background= new_user.clinical_background,
-        learning_style= new_user.learning_style,
-        personality= new_user.personality,
-        type= new_user.type,
-        addition_information= new_user.addition_information
+    data = UserOut.from_orm(new_user)
+    return APIResponse(
+            status="00",
+            message="User profile created successfully",
+            data=data
+        )
+
+
+
+def retrieve_from_token(decoded_token: dict, db: Session):
+    # Require that the user's email is verified.
+    if not decoded_token.get("email_verified", False):
+        raise HTTPException(
+            status_code=401,
+            detail="Email not verified. Please verify your email before signing up."
+        )
+
+    firebase_uid = decoded_token.get("uid")
+    email = decoded_token.get("email")
+
+    # Ensure the token provides the necessary details.
+    if not firebase_uid or not email:
+        raise HTTPException(
+            status_code=400,
+            detail="Firebase token must include both uid and email."
+        )
+
+    # Check if the user already exists in the SQL database.
+    user = db.query(User).filter(User.firebase_uid == firebase_uid).first()
+    if user:
+        raise HTTPException(
+            status_code=400,
+            detail="User already exists in the database."
+        )
+
+    return firebase_uid, email
+
+def create_user(user_data: UserCreate, token, db: Session):
+
+    firebase_uid, email  = retrieve_from_token(token, db)
+    hash_password(user_data.password)
+    new_user = User(
+        firebase_uid=firebase_uid,
+        email=email,
+        password=hash_password(user_data.password)
     )
+    db.add(new_user)
+    db.commit()
+    db.flush()
+
+    print("ID Value: ", new_user.id)
+    return APIResponse(
+        status="00",
+        message="User created successfully",
+        data=new_user.email
+    )
+
 
 def fetch_orientees_by_preceptor(preceptor_id: int, db: Session):
     # Retrieve all matches where preceptor_id equals the provided value

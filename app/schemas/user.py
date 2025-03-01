@@ -10,7 +10,8 @@ class Role(str, Enum):
     ORIENTEE = "ORIENTEE"
     PRECEPTOR = "PRECEPTOR"
 
-class UserCreate(BaseModel):
+class UserProfile(BaseModel):
+    id: int = None
     first_name: str
     last_name: str
     phone_number: str = None
@@ -20,6 +21,17 @@ class UserCreate(BaseModel):
     learning_style: str = None
     personality: str = None
     addition_information: str = None
+
+
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str
+    confirm_password: str
+
+
+class UserSignIn(BaseModel):
+    email: EmailStr
+    password: str
 
 class UserOut(BaseModel):
     id: int
