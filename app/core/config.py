@@ -1,7 +1,7 @@
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    APP_NAME: str = "Pavement Identifier"
+    APP_NAME: str = "Nursing Orientation Improvement"
     DEBUG: bool = False
     DATABASE_URL: str = '444'
     RABBITMQ_URL: str = '444'
