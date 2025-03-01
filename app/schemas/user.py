@@ -56,5 +56,6 @@ class UserOut(BaseModel):
     learning_style: str
     personality: str
     addition_information: str = None
+    match_information: str = None
 
     model_config = ConfigDict(from_attributes=True)

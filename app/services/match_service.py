@@ -50,14 +50,13 @@ def retrieve_all_possible_matches(orientee_id: int, db: Session):
     # Convert response to JSON
     data = response.json()
 
-    # Extract user_ids from the response
-    user_ids = [item["user_id"] for item in data]
-    print("User IDs:", user_ids)
-
     preceptors = []
-    for user_id in user_ids:
-        preceptor = db.query(User).filter(User.id == user_id).first()
-        preceptors.append(preceptor)
+    for item in data:
+        preceptor = db.query(User).filter(User.id == item["user_id"]).first()
+        if preceptor:
+            preceptor_data = UserOut.from_orm(preceptor).dict()
+            preceptor_data["match_information"] = item["information"]
+            preceptors.append(preceptor_data)
 
     preceptor_data = [UserOut.from_orm(p) for p in preceptors]
 
