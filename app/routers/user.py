@@ -1,13 +1,8 @@
-# app/routers/user.py
 from fastapi import APIRouter, Depends, HTTPException
-from uuid import uuid4
 
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-# Import db from firebase_app (the Firestore client)
-from app.firebase_app import db
-from pydantic import BaseModel
 from app.models.user import User, Role
 from app.schemas.user import UserOut, UserCreate
 from app.services.profile_service import create_user_profile
