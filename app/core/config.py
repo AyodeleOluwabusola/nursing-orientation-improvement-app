@@ -7,6 +7,8 @@ class Settings(BaseSettings):
     RABBITMQ_URL: str = '444'
     QUEUE_NAME: str = '333'
     RABBITMQ_HOST: str = '39876'
+    ADD_MENTOR: str = 'http://127.0.0.1:7000/embedmentor'
+    MATCH_URL: str = 'http://127.0.0.1:7000/returnmentors'
 
     class Config:
         env_file = ".env"
