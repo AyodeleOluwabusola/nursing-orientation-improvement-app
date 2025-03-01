@@ -132,6 +132,7 @@ def match_orientee_with_perceptor(request: MatchRetrieve, db: Session):
     db.flush()
 
     orientee.matched = True
+    orientee.match_information = request.match_information
     db.commit()
     db.refresh(orientee)
 
