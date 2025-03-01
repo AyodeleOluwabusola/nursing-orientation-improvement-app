@@ -13,6 +13,13 @@ import json
 
 def create_user_profile(user_data: UserProfileReq, db: Session):
 
+    user = db.query(User).filter(User.email == user_data.email).first()
+    if user is not None:
+        return APIResponse(
+            status="01",
+            message="Email already registered"
+        )
+
     new_user = User(
         email=user_data.email,
         first_name=user_data.first_name,
