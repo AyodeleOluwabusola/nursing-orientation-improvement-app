@@ -16,7 +16,10 @@ def retrieve_all_possible_matches(orientee_id: int, db: Session):
     orientee = db.query(User).filter(User.id == orientee_id).first()
 
     if not orientee:
-        return {"error": "Orientee not found"}
+        return APIResponse(
+            status="01",
+            message="Orientee not found"
+        )
 
 
     background = get_background(orientee_id, db)
@@ -26,7 +29,10 @@ def retrieve_all_possible_matches(orientee_id: int, db: Session):
     }
     response = requests.post(settings.MATCH_URL, data=json.dumps(payload), headers=headers)
     if response.status_code != 200:
-        return {"error": "Failed to match orientee"}
+        return APIResponse(
+            status="01",
+            message="Failed to match orientee",
+        )
 
     print("Status Code:", response.status_code)
     try:
@@ -76,7 +82,10 @@ def match_orientee_with_perceptor(request: MatchRetrieve, db: Session):
     preceptor = db.query(User).filter(User.id == request.preceptor_id).first()
 
     if not preceptor:
-        return {"error": "Preceptor not found"}
+        return APIResponse(
+            status="01",
+            message="Preceptor not found"
+        )
 
     # Create Match model
     new_match = Match(
