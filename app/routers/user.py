@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.user import User, Role
 from app.schemas.response import APIResponse
-from app.schemas.user import UserProfile, UserSignIn, UserCreate
+from app.schemas.user import UserProfile, UserSignIn, UserCreate, UserProfileReq
 from app.services.firebase_auth import verify_firebase_token, verify_password
 from app.services.profile_service import create_user_profile, create_user, fetch_orientees_by_preceptor
 
@@ -25,7 +25,7 @@ def retrieve_all_orientees_by_preceptor(preceptor_id: int, db: Session = Depends
 
 @router.post("")
 def create_profile(
-        user_data: UserProfile,
+        user_data: UserProfileReq,
         db: Session = Depends(get_db),
 ):
     return  create_user_profile(user_data, db)

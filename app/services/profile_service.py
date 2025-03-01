@@ -4,14 +4,14 @@ from app.core.config import settings
 from app.models.match import Match
 from app.models.user import User
 from app.schemas.response import APIResponse
-from app.schemas.user import UserProfile, UserOut, UserCreate
+from app.schemas.user import UserProfile, UserOut, UserCreate, UserProfileReq
 from app.services.firebase_auth import hash_password
 from app.services.match_service import get_background
 
 import requests
 import json
 
-def create_user_profile(user_data: UserProfile, db: Session):
+def create_user_profile(user_data: UserProfileReq, db: Session):
 
     new_user = User(
         email=user_data.email,
@@ -19,11 +19,13 @@ def create_user_profile(user_data: UserProfile, db: Session):
         last_name=user_data.last_name,
         phone_number=user_data.phone_number,
         type=user_data.type,
-        clinical_background=user_data.clinical_background,
+        clinical_background=stringify(user_data.clinical_background),
         learning_style=user_data.learning_style,
-        personality=user_data.personality,
-        addition_information=user_data.addition_information
+        personality=stringify(user_data.personality),
+        addition_information=user_data.addition_information,
+        years_experience=user_data.years_experience
     )
+
     db.add(new_user)
     db.commit()
     db.flush()
@@ -141,3 +143,5 @@ def embed_preceptor(preceptor_id: int, db: Session):
 
     return {"status": "00", "message": "Added mentor successfully"}
 
+def stringify(input) -> str:
+        return ", ".join(input)

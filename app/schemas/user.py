@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from sqlalchemy import Integer
 from pyasn1_modules.rfc1902 import Integer
@@ -22,6 +22,18 @@ class UserProfile(BaseModel):
     personality: str = None
     addition_information: str = None
 
+class UserProfileReq(BaseModel):
+        id: int = None
+        first_name: str
+        last_name: str
+        phone_number: str = None
+        email: EmailStr
+        type: Role
+        clinical_background: List[str]
+        learning_style: str = None
+        personality: List[str] = None
+        addition_information: str = None
+        years_experience: str = None
 
 class UserCreate(BaseModel):
     email: EmailStr

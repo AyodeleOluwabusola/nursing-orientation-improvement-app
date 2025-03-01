@@ -22,3 +22,4 @@ class User(Base):
     learning_style = Column(String, nullable=False)
     personality = Column(String, nullable=False)
     addition_information = Column(String, nullable=True)
+    years_experience = Column(String, nullable=True)
