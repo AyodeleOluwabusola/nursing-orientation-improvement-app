@@ -14,7 +14,7 @@ import json
 def create_user_profile(user_data: UserProfileReq, db: Session):
 
     user = db.query(User).filter(User.email == user_data.email).first()
-    if user is not None:
+    if user:
         return APIResponse(
             status="01",
             message="Email already registered"
