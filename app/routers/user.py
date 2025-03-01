@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+﻿from fastapi import APIRouter, Depends, HTTPException
 
 from sqlalchemy.orm import Session
 
@@ -19,7 +19,7 @@ def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-@router.get("/{email}")
+@router.get("/details/{email}")
 def get_user_by_email(email: str, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == email).first()
     print(user)
