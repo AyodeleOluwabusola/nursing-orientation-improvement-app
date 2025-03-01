@@ -11,7 +11,7 @@ class Role(str, Enum):
     PRECEPTOR = "PRECEPTOR"
 
 class UserProfile(BaseModel):
-    id: str
+    id: int
     first_name: str
     last_name: str
     phone_number: str = None

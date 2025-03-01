@@ -13,39 +13,40 @@ import json
 
 def create_user_profile(user_data: UserProfile, db: Session):
 
-    new_user = User(
-        email=user_data.email,
-        first_name=user_data.first_name,
-        last_name=user_data.last_name,
-        phone_number=user_data.phone_number,
-        type=user_data.type,
-        clinical_background=user_data.clinical_background,
-        learning_style=user_data.learning_style,
-        personality=user_data.personality,
-        addition_information=user_data.addition_information
-    )
-    db.add(new_user)
-    db.commit()
-    db.flush()
+    # new_user = User(
+    #     email=user_data.email,
+    #     first_name=user_data.first_name,
+    #     last_name=user_data.last_name,
+    #     phone_number=user_data.phone_number,
+    #     type=user_data.type,
+    #     clinical_background=user_data.clinical_background,
+    #     learning_style=user_data.learning_style,
+    #     personality=user_data.personality,
+    #     addition_information=user_data.addition_information
+    # )
+    user = db.query(User).filter(User.id == user_data.id).first()
+    if not user:
+        return None
 
-    print("ID Value: ", new_user.id)
+    update_dict = user_data.dict(exclude_unset=True)
+    for key, value in update_dict.items():
+        setattr(user, key, value)
+
+    db.commit()
+    db.refresh(user)
+
+    print("ID Value: ", user.id)
     if (user_data.type == "PRECEPTOR"):
-        # Call Vector database
-        response = embed_preceptor(new_user.id, db)
+        response = embed_preceptor(user.id, db)
         if response.get("error"):
             raise HTTPException(status_code=400, detail="Failed to register preceptor")
 
-    return UserProfile(
-        email=new_user.email,
-        first_name=new_user.first_name,
-        last_name=new_user.last_name,
-        phone_number= new_user.phone_number,
-        clinical_background= new_user.clinical_background,
-        learning_style= new_user.learning_style,
-        personality= new_user.personality,
-        type= new_user.type,
-        addition_information= new_user.addition_information
+    return APIResponse(
+        status="00",
+        message="User profile created successfully",
+        data=user
     )
+
 
 
 def retrieve_from_token(decoded_token: dict, db: Session):
