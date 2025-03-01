@@ -75,7 +75,7 @@ def retrieve_from_token(decoded_token: dict, db: Session):
             detail="User already exists in the database."
         )
 
-    return {"firebase_uid": firebase_uid, "email": email}
+    return firebase_uid, email
 
 def create_user(user_data: UserCreate, token, db: Session):
 
