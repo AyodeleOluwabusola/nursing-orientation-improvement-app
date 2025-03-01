@@ -19,6 +19,14 @@ def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
+@router.get("/{email}")
+def get_user_by_email(email: str, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == email).first()
+    print(user)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
 @router.get("/preceptor/{preceptor_id}")
 def retrieve_all_orientees_by_preceptor(preceptor_id: int, db: Session = Depends(get_db)):
     return fetch_orientees_by_preceptor(preceptor_id, db)
