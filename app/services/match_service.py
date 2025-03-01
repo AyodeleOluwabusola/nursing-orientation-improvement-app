@@ -21,6 +21,13 @@ def retrieve_all_possible_matches(orientee_id: int, db: Session):
             message="Orientee not found"
         )
 
+    data = UserOut.from_orm(orientee)
+    if not data.type == "ORIENTEE":
+        return APIResponse(
+            status="01",
+            message="User not an orientee"
+        )
+
 
     background = get_background(orientee_id, db)
     payload = {"background": background}
@@ -70,6 +77,7 @@ def get_background(user_id: int, db: Session = Depends(get_db)):
 
     # Concatenate fields into a single string following the structure
     background_str = (
+        f"Name: {user.first_name}, {user.last_name}\n\n"
         f"Clinical Background: {user.clinical_background}\n\n"
         f"Learning Style: {user.learning_style}\n\n"
         f"Personality: {user.personality}\n\n"
@@ -80,11 +88,27 @@ def get_background(user_id: int, db: Session = Depends(get_db)):
 
 def match_orientee_with_perceptor(request: MatchRetrieve, db: Session):
     preceptor = db.query(User).filter(User.id == request.preceptor_id).first()
+    orientee = db.query(User).filter(User.id == request.orientee_id).first()
 
-    if not preceptor:
+    if not preceptor or not orientee:
         return APIResponse(
             status="01",
-            message="Preceptor not found"
+            message="Preceptor/Orientee not found"
+        )
+
+    orientee_data = UserOut.from_orm(orientee)
+    preceptor_data = UserOut.from_orm(preceptor)
+
+    if not orientee_data.type == "ORIENTEE":
+        return APIResponse(
+            status="01",
+            message="User not an orientee"
+        )
+
+    if not preceptor_data.type == "PRECEPTOR":
+        return APIResponse(
+            status="01",
+            message="User not a preceptor"
         )
 
     # Create Match model

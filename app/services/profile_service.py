@@ -11,7 +11,7 @@ from app.services.match_service import get_background
 import requests
 import json
 
-def create_user_profile(user_data: UserProfile, token: dict, db: Session):
+def create_user_profile(user_data: UserProfile, db: Session):
 
     new_user = User(
         email=user_data.email,
@@ -32,14 +32,15 @@ def create_user_profile(user_data: UserProfile, token: dict, db: Session):
     if (user_data.type == "PRECEPTOR"):
         # Call Vector database
         response = embed_preceptor(new_user.id, db)
+        print("Response: ", response)
         if response.get("error"):
             raise HTTPException(status_code=400, detail="Failed to register preceptor")
 
-
+    data = UserOut.from_orm(new_user)
     return APIResponse(
             status="00",
             message="User profile created successfully",
-            data=new_user
+            data=data
         )
 
 
