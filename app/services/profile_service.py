@@ -4,7 +4,7 @@ from app.core.config import settings
 from app.models.match import Match
 from app.models.user import User
 from app.schemas.response import APIResponse
-from app.schemas.user import UserProfile, UserOut, UserCreate, UserProfileReq
+from app.schemas.user import UserOut, UserCreate, UserProfileReq
 from app.services.firebase_auth import hash_password
 from app.services.match_service import get_background
 
@@ -30,7 +30,8 @@ def create_user_profile(user_data: UserProfileReq, db: Session):
         learning_style=user_data.learning_style,
         personality=stringify(user_data.personality),
         addition_information=user_data.addition_information,
-        years_experience=user_data.years_experience
+        years_experience=user_data.years_experience,
+        matched=False
     )
 
     db.add(new_user)

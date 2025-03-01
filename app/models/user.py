@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Enum
+from sqlalchemy import Column, Integer, String, Enum, Boolean
 from app.models.base import Base
 import enum
 
@@ -23,3 +23,4 @@ class User(Base):
     personality = Column(String, nullable=False)
     addition_information = Column(String, nullable=True)
     years_experience = Column(String, nullable=True)
+    matched = Column(Boolean)

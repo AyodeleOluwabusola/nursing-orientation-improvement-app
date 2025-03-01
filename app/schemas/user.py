@@ -57,5 +57,6 @@ class UserOut(BaseModel):
     personality: str
     addition_information: str = None
     match_information: str = None
+    matched: bool = False
 
     model_config = ConfigDict(from_attributes=True)

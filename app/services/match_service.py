@@ -110,15 +110,26 @@ def match_orientee_with_perceptor(request: MatchRetrieve, db: Session):
             message="User not a preceptor"
         )
 
+
+    if orientee_data.matched:
+        return APIResponse(
+            status="01",
+            message="Orientee already matched to a preceptor"
+        )
+
     # Create Match model
     new_match = Match(
         orientee_id=request.orientee_id,
         preceptor_id=request.preceptor_id,
     )
-
     db.add(new_match)
     db.commit()
     db.flush()
+
+    orientee.matched = True
+    db.commit()
+    db.refresh(orientee)
+
 
     return APIResponse(
         status="00",
