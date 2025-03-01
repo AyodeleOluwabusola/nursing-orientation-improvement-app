@@ -1,5 +1,4 @@
-# pavement-identifier-backend
-This project integrates a model that classifies pavement types based on input images. It supports both singular and batch processing, utilizing FastAPI for the backend and RabbitMQ for queuing and batch handling.
+This project is designed to revolutionize nursing orientation by leveraging advanced matching algorithms to pair newly hired nurses (orientees) with experienced mentors (preceptors) using AI driven method. The system aims to streamline the onboarding process, enhance training effectiveness, and ultimately improve patient care outcomes. Project was build in Python (FastAPI)
 
 1. Install all packages:
 pip install -r requirements.txt
