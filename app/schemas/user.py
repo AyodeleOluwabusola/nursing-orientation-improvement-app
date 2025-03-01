@@ -33,6 +33,7 @@ class UserProfileReq(BaseModel):
         learning_style: str = None
         personality: List[str] = None
         addition_information: str = None
+        match_information: str = ""
         years_experience: int = None
 
 class UserCreate(BaseModel):

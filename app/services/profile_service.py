@@ -31,6 +31,7 @@ def create_user_profile(user_data: UserProfileReq, db: Session):
         personality=stringify(user_data.personality),
         addition_information=user_data.addition_information,
         years_experience=user_data.years_experience,
+        match_information=user_data.match_information,
         matched=False
     )
 
@@ -127,6 +128,25 @@ def fetch_orientees_by_preceptor(preceptor_id: int, db: Session):
         status="00",
         message="All Orientees matched to preceptor successfully retrieved",
         data=data
+    )
+
+def fetch_preceptor_by_orientee(orientee_id: int, db: Session):
+    # Retrieve all matches where preceptor_id equals the provided value
+    match = db.query(Match).filter(Match.orientee_id == orientee_id).first()
+    if not match:
+        raise HTTPException(status_code=404, detail="No matches found for this orientee")
+
+    # Extract orientee IDs from the matches
+    print("match: ", match)
+
+    preceptor = db.query(User).filter(User.id == match.preceptor_id).first()
+    preceptor_data = UserOut.from_orm(preceptor)
+    print("preceptor data: ", preceptor_data)
+
+    return APIResponse(
+        status="00",
+        message="The Preceptor matched to orientee successfully retrieved",
+        data=preceptor_data
     )
 
 def embed_preceptor(preceptor_id: int, db: Session):

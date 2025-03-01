@@ -7,7 +7,7 @@ from app.models.user import User, Role
 from app.schemas.response import APIResponse
 from app.schemas.user import UserProfile, UserSignIn, UserCreate, UserProfileReq
 from app.services.firebase_auth import verify_firebase_token, verify_password
-from app.services.profile_service import create_user_profile, create_user, fetch_orientees_by_preceptor
+from app.services.profile_service import create_user_profile, create_user, fetch_orientees_by_preceptor, fetch_preceptor_by_orientee
 
 router = APIRouter()
 
@@ -30,6 +30,11 @@ def get_user_by_email(email: str, db: Session = Depends(get_db)):
 @router.get("/preceptor/{preceptor_id}")
 def retrieve_all_orientees_by_preceptor(preceptor_id: int, db: Session = Depends(get_db)):
     return fetch_orientees_by_preceptor(preceptor_id, db)
+
+@router.get("/orientee/{orientee_id}")
+def retrieve_preceptor_for_orientee(orientee_id: int, db: Session = Depends(get_db)):
+    return fetch_preceptor_by_orientee(orientee_id, db)
+
 
 @router.post("")
 def create_profile(
