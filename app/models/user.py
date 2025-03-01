@@ -8,8 +8,7 @@ class Role(enum.Enum):
     PRECEPTOR = "PRECEPTOR"
 
 class User(Base):
-    __tablename__ = "users"
-
+    __tablename__ = "users"=
     id = Column(Integer, primary_key=True, index=True)
     firebase_uid = Column(String)
     password = Column(String)
